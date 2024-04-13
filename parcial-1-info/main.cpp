@@ -170,7 +170,7 @@ void crearCerradura() {
             }
 
             if (resultadoComparacion) {
-                cout << "La restriccion se cumplio en la comparacion " << j + 1 << ": Matriz " << i + 1 << " vs Matriz " << i + 2 << " rotada " << (rotacionesMatriz1 * 90) << " grados: Cumple" << endl;
+                cout << "La restriccion se cumplio en la comparacion " << j + 1 << ": Matriz " << i + 1 << " rotada " << (rotacionesMatriz1 * 90) << " grados "<< " vs Matriz " << i + 2 << " rotada " << (rotacionesMatriz2 * 90) << " grados: Cumple" << endl;
                 claveCumplida = true;
                 break; // Si la clave se cumple, salir del bucle
             }
