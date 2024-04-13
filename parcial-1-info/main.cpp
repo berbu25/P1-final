@@ -4,16 +4,16 @@ using namespace std;
 
 // Función para reservar memoria para una matriz de tamaño m x m
 int** reservarMatriz(int m) {
-    int** matriz = new int*[m];
-    for (int i = 0; i < m; i++) {
-        matriz[i] = new int[m];
+    int** matriz = new int*[m + 1];
+    for (int i = 1; i <= m; i++) {
+        matriz[i] = new int[m + 1];
     }
     return matriz;
 }
 
 // Función para liberar memoria de una matriz
 void liberarMatriz(int** matriz, int m) {
-    for (int i = 0; i < m; i++) {
+    for (int i = 1; i <= m; i++) {
         delete[] matriz[i];
     }
     delete[] matriz;
@@ -22,9 +22,9 @@ void liberarMatriz(int** matriz, int m) {
 // Función para generar una matriz con números ascendentes, con el centro en 0
 void generarMatriz(int** matriz, int m) {
     int k = 1;
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < m; j++) {
-            if (i == m / 2 && j == m / 2) {
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= m; j++) {
+            if (i == (m + 1) / 2 && j == (m + 1) / 2) {
                 matriz[i][j] = 0;
             } else {
                 matriz[i][j] = k++;
@@ -39,15 +39,15 @@ void rotarMatriz(int** matriz, int m) {
     int** matrizRotada = reservarMatriz(m);
 
     // Realizar la rotación
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < m; j++) {
-            matrizRotada[j][m - 1 - i] = matriz[i][j];
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= m; j++) {
+            matrizRotada[j][m - i + 1] = matriz[i][j];
         }
     }
 
     // Copiar la matriz rotada de vuelta a la matriz original
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < m; j++) {
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= m; j++) {
             matriz[i][j] = matrizRotada[i][j];
         }
     }
@@ -58,8 +58,8 @@ void rotarMatriz(int** matriz, int m) {
 
 // Función para imprimir una matriz
 void imprimirMatriz(int** matriz, int m) {
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < m; j++) {
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= m; j++) {
             cout << matriz[i][j] << " ";
         }
         cout << endl;
@@ -152,44 +152,55 @@ void crearCerradura() {
         int rotacionesMatriz1 = 0; // Contador de rotaciones para matriz1
         int rotacionesMatriz2 = 0; // Contador de rotaciones para matriz2
 
-        for (int j = 0; j < 4; ++j) {
-            int fila = clave[i] - 1;
-            int columna = clave[i + 1] - 1;
-            int valorA = matriz1[fila][columna];
-            int valorB = matriz2[fila][columna];
-            int condicionComparacion = clave[i + 2];
+        // Realizar las comparaciones entre las matriz 2
+        for (int m=0; m<4; ++m){
 
-            // Verificar si la clave se cumple en la posición dada
-            bool resultadoComparacion = false;
-            if (condicionComparacion == 1) {
-                resultadoComparacion = (valorA > valorB);
-            } else if (condicionComparacion == 0) {
-                resultadoComparacion = (valorA == valorB);
-            } else if (condicionComparacion == -1) {
-                resultadoComparacion = (valorA < valorB);
+            for (int j = 0; j < 4; ++j) {
+                // Realizar las comparaciones entre las matrices
+                int fila = clave[0];
+                int columna = clave[1];
+                int valorA = matriz1[fila][columna];
+                int valorB = matriz2[fila][columna];
+                int condicionComparacion = clave[i + 2];
+
+                // Verificar si la clave se cumple en la posición dada
+                bool resultadoComparacion = false;
+                if (condicionComparacion == 1) {
+                    resultadoComparacion = (valorA > valorB);
+                } else if (condicionComparacion == 0) {
+                    resultadoComparacion = (valorA == valorB);
+                } else if (condicionComparacion == -1) {
+                    resultadoComparacion = (valorA < valorB);
+                }
+
+                if (resultadoComparacion) {
+                    cout << "La restriccion se cumplio en la comparacion " << j + 1<<" - Matriz " <<i+1<< " rotada " << (rotacionesMatriz1 * 90)<<" grados "<<" vs Matriz "<< i + 2 << " rotada " << (rotacionesMatriz2 * 90) << " grados: Cumple" << endl;
+                    claveCumplida = true;
+                    break; // Si la clave se cumple, salir del bucle
+                }
+
+                // Rotar la matriz 2 para la próxima iteración
+                cout<<endl<<"Matriz 2 parcialmente rotada"<<endl;
+                imprimirMatriz(matriz2, dimension);
+                rotarMatriz(matriz2, dimension);
+                rotacionesMatriz2++;
+
+                cout<<endl<<"Va a hacer otra iteracion"<<endl;
             }
-
-            if (resultadoComparacion) {
-                cout << "La restriccion se cumplio en la comparacion " << j + 1 << ": Matriz " << i + 1 << " vs Matriz " << i + 2 << " rotada " << (rotacionesMatriz1 * 90) << " grados: Cumple" << endl;
-                claveCumplida = true;
-                break; // Si la clave se cumple, salir del bucle
+            if (claveCumplida) {
+                break;
             }
-
-            // Rotar la matriz 2 para la próxima iteración
-            rotarMatriz(matriz2, dimension);
-            rotacionesMatriz2++;
+            if (!claveCumplida) {
+                cout<<endl<<"Matriz 1 parcialmente rotada"<<endl;
+                imprimirMatriz(matriz1, dimension);
+                rotarMatriz(matriz1, dimension);
+                rotacionesMatriz1++; // Incrementar el contador de rotaciones de la matriz 1
+            }
         }
-
         if (!claveCumplida) {
-            cout << "No se cumplio la clave en ninguna rotacion de las matrices " << i + 1 << " y " << i + 2 << endl;
-            // Si la clave no se cumple, rotar la matriz 1 para la próxima iteración
-            rotarMatriz(matriz1, dimension);
-            rotacionesMatriz1++;
+            cout << "La restriccion NO se cumplio en la comparacion " <<" - Matriz " <<i+1<< " rotada " << (rotacionesMatriz1 * 90)<<" grados "<<" vs Matriz "<< i + 2 << " rotada " << (rotacionesMatriz2 * 90) << " grados: No cumple" << endl;
+            //cout << "No se cumplio la clave en ninguna rotacion de las matrices " << i + 1 << " y " << i + 2 << endl;
         }
-
-        // Reiniciar rotaciones de matriz 2
-        rotacionesMatriz2 = 0;
-
         // Liberar memoria de las matrices
         liberarMatriz(matriz1, dimension);
         liberarMatriz(matriz2, dimension);
