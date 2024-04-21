@@ -121,6 +121,10 @@ void crearCerradura() {
     if (dimension % 2 == 0) {
         dimension++;
     }
+    //Hace que la dimensión minima de la matriz sea 3x3
+    if (dimension < 3) {
+        dimension = 3;
+    }
 
     // Generar la matriz base para la cerradura y mostrarla
     int** matrizBase = reservarMatriz(dimension);
@@ -128,7 +132,7 @@ void crearCerradura() {
     cout << "\nMatriz base para esta clave:" << endl;
     imprimirMatriz(matrizBase, dimension);
 
-    // Imprimir todos los elementos del arreglo clave, incluyendo -3
+    // Imprimir todos los elementos del arreglo clave, excluyendo -3
     cout << "Elementos del arreglo clave:" << endl;
     for (int i = 0; i < contador; ++i) {
         cout << clave[i] << " ";
