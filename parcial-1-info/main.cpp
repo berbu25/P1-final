@@ -152,11 +152,22 @@ void crearCerradura() {
         int** matriz2 = reservarMatriz(dimension);
         generarMatriz(matriz2, dimension);
 
+
         // Realizar las comparaciones entre las matrices
         cout << "\nComparaciones entre los valores en las matrices rotadas:" << endl;
         bool claveCumplida = false;
-
         int rotacionesMatriz = 0; // Contador de rotaciones para matriz2
+
+        int rotacionesModos = modos[i+1]; // Obtener las rotaciones de la matriz correspondiente
+        // Realizar las rotaciones necesarias para la matriz 1
+        for (int r = 0; r < rotacionesModos; ++r) {
+            rotarMatriz(matriz1, dimension);
+        }
+
+        // Realizar las rotaciones necesarias para la matriz 2
+        for (int r = 0; r < rotacionesMatriz; ++r) {
+            rotarMatriz(matriz2, dimension);
+        }
 
         // Realizar las comparaciones entre las matriz 2
         for (int m=0; m<4; ++m){
@@ -193,7 +204,7 @@ void crearCerradura() {
 
         }
         if (!claveCumplida) {
-            modos[i + 2] = 0; // Si no se cumple, almacenar cero en la posición correspondiente
+            modos[i+2] = 0; // Si no se cumple, almacenar cero en la posición correspondiente
             cout << "La restriccion NO se cumplio con ninguna rotacion" << endl;
         }
 
