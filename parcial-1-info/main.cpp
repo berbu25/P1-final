@@ -144,11 +144,11 @@ void crearCerradura() {
     // Crear todas las matrices de la cerradura y comparar los valores según la clave
     for (int i = 0; i < contador - 2; ++i) {
 
-            int** matriz1 = reservarMatriz(dimension);
-            generarMatriz(matriz1, dimension);
+        int** matriz1 = reservarMatriz(dimension);
+        generarMatriz(matriz1, dimension);
 
-            int** matriz2 = reservarMatriz(dimension);
-            generarMatriz(matriz2, dimension);
+        int** matriz2 = reservarMatriz(dimension);
+        generarMatriz(matriz2, dimension);
 
 
         // Realizar las comparaciones entre las matrices
@@ -179,7 +179,10 @@ void crearCerradura() {
             }
 
             if (resultadoComparacion) {
-                cout << "La restriccion se cumplio en la comparacion " << m + 1<<" - Matriz " <<i+1<<" vs Matriz "<< i + 2 << " rotada " << (rotacionesMatriz * 90) << " grados: Cumple" << endl;
+
+                cout << "La restriccion se cumplio en la comparacion " << m + 1<<" - Matriz " <<i+1<<" vs Matriz "<< i + 2 << " rotada " << (rotacionesMatriz * 90) << " grados: Cumple" << endl <<endl;
+                imprimirMatriz(matriz1, dimension);
+                imprimirMatriz(matriz2, dimension);
                 claveCumplida = true;
                 break; // Si la clave se cumple, salir del bucle
             }
@@ -194,22 +197,23 @@ void crearCerradura() {
             rotarMatriz(matriz2, dimension);
             rotacionesMatriz++;
 
-            cout<<endl<<"Va a hacer otra iteracion"<<endl;
+            cout<<endl<<"Va a hacer otra iteracion\n"<<endl;
 
             if (claveCumplida) {
                 break;
             }
             if (!claveCumplida) { // si no se cumple se debe ampliar matriz
-                //cout<<endl<<"Matriz 1 parcialmente rotada"<<endl;
-                //imprimirMatriz(matriz1, dimension);
-                //rotarMatriz(matriz1, dimension);
-                //rotacionesMatriz1++; // Incrementar el contador de rotaciones de la matriz 1
+
             }
         }
         if (!claveCumplida) {
-            cout << "La restriccion NO se cumplio en la comparacion " <<" - Matriz " <<i+1<< " vs Matriz "<< i + 2 << " rotada " << (rotacionesMatriz * 90) << " grados: No cumple" << endl;
+            if (rotacionesMatriz!=0){
+                rotacionesMatriz=0;
+            }
+            cout << "La restriccion NO se cumplio con ninguna rotacion"<< endl;
             //cout << "No se cumplio la clave en ninguna rotacion de las matrices " << i + 1 << " y " << i + 2 << endl;
         }
+        cout<<endl<<"Rotacion:"<<rotacionesMatriz<<endl;
         // Liberar memoria de las matrices
         liberarMatriz(matriz1, dimension);
         liberarMatriz(matriz2, dimension);
