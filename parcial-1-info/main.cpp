@@ -209,8 +209,12 @@ void crearCerradura() {
             }
 
             if (!claveCumplida) {
+                liberarMatriz(matriz2, dimension2);
+                dimension2 = dimension;
+                matriz2 = reservarMatriz(dimension2);
+                generarMatriz(matriz2, dimension2);
                 rotacionesMatriz = 0;
-                cout << "La dimensión de la matriz B se va a modificar:" << endl;
+                cout << "La dimension de la matriz B se va a modificar:" << endl;
                 if (condicionComparacion == 1) {
                     cout << endl << "Matriz2 se va a reducir" << endl;
                     liberarMatriz(matriz2, dimension2);
