@@ -1,7 +1,4 @@
 #include <iostream>
-#include <string>
-#include <cctype> // Para la función isdigit()
-//#include <cstdlib>
 
 using namespace std;
 
@@ -100,8 +97,6 @@ void imprimirMatriz(int** matriz, int m) {
     cout << endl;
 }
 
-
-
 // Función para agregar un dato al final de un arreglo
 int* agregarDato(int numero, int* arreglo, int longitud) {
     int* nuevoArreglo = new int[longitud + 1];
@@ -117,12 +112,11 @@ int* agregarDato(int numero, int* arreglo, int longitud) {
 void crearCerradura() {
     int contador = 0, condicion;
     cout << "Ingrese la clave: (La condicion 1 es la fila y la condicion 2 es la columna)" << endl;
-    int* clave = new int[contador];
-
-
+    int* clave = nullptr;
 
     // Leer las condiciones de entrada del usuario
     while (true) {
+
         string entrada;
         cout << "Ingrese la condicion " << contador + 1 << ": ";
         cin >> entrada;
@@ -160,18 +154,21 @@ void crearCerradura() {
             cout << "Debe ingresar un valor entero." << endl;
         }
     }
+
+
     int modos[contador-1] = {0};
+    int dimensiones[contador-1] = {0}; // Nuevo arreglo para almacenar las dimensiones de las matrices
 
     // Calcular la dimensión de las matrices de la cerradura
     int dimension = (clave[0] > clave[1]) ? clave[0] : clave[1];
     if (dimension % 2 == 0) {
         dimension++;
     }
-
     dimension=dimension+(contador);
     if (dimension % 2 == 0) {
         dimension++;
     }
+
     int centroFila = (dimension + 1)/2;
     int centroColumna = (dimension + 1)/2;
 
@@ -179,18 +176,13 @@ void crearCerradura() {
     int dimension2=dimension;
 
     if (clave[0] == centroFila && clave[1] == centroColumna) {
-        cout << "No se puede usar el centro de la matriz para generar la cerradura. Ingrese otra fila y columna: " << endl;
+        cout <<endl<< "No se puede usar el centro de la matriz para generar la cerradura. "<<endl<<"Ingrese otra fila y columna: " << endl;
         // Pedir nuevamente la fila y la columna
-        cout << "Ingrese la nueva fila: ";
+        cout <<endl<<"Ingrese la nueva fila: ";
         cin >> clave[0];
-        cout << "Ingrese la nueva columna: ";
+        cout <<endl<< "Ingrese la nueva columna: ";
         cin >> clave[1];
     }
-
-    //Hace que la dimensión mínima de la matriz sea 3x3
-    //if (dimension < 3) {
-    //    dimension = 3;
-    //  }
 
     // Generar la matriz base para la cerradura y mostrarla
     int** matrizBase = reservarMatriz(dimension);
@@ -240,80 +232,114 @@ void crearCerradura() {
         int aux = 0;
 
         do{
-        // Realizar las comparaciones entre las matriz 2
-        for (int m=0; m<4; ++m){
-            // Realizar las comparaciones entre las matrices
-            int valorA = matriz1[fila1][columna1];
-            int valorB = matriz2[fila2][columna2];
+            // Realizar las comparaciones entre las matriz 2
+            for (int m=0; m<4; ++m){
+                // Realizar las comparaciones entre las matrices
+                int valorA = matriz1[fila1][columna1];
+                int valorB = matriz2[fila2][columna2];
 
-            // Verificar si la clave se cumple en la posición dada
-            bool resultadoComparacion = false;
-            if (condicionComparacion == 1) {
-                resultadoComparacion = (valorA > valorB);
-            } else if (condicionComparacion == 0) {
-                resultadoComparacion = (valorA == valorB);
-            } else if (condicionComparacion == -1) {
-                resultadoComparacion = (valorA < valorB);
-            }
-
-            if (resultadoComparacion) {
-                cout << "La restriccion se cumplio en la comparacion " << m + 1 << " - Matriz " << i + 1 << " vs Matriz " << i + 2 << " rotada " << (rotacionesMatriz * 90) << " grados: Cumple" << endl << endl;
-                imprimirMatriz(matriz1, dimension1);
-                imprimirMatriz(matriz2, dimension2);
-                claveCumplida = true;
-                modos[i + 2] = rotacionesMatriz;
-                break; // Si la clave se cumple, salir del bucle
-            }
-
-            // Rotar la matriz 2 para la próxima iteración
-            rotarMatriz(matriz2, dimension2);
-            rotacionesMatriz++;
-        }
-
-        cout << "La dimensión de la matriz B se va a modificar:" << endl;
-
-        if (!claveCumplida) {
-            rotacionesMatriz=0;
-            if (condicionComparacion == 1) {
-                dimension2=dimension2-2;
-                fila2=fila2-1;
-                columna2=columna2-1;
-            } else if (condicionComparacion == 0) {
-                if(dimension1>dimension2){
-                    dimension2=dimension2+2;
-                    fila2=fila2+1;
-                    columna2=columna2+1;
+                // Verificar si la clave se cumple en la posición dada
+                bool resultadoComparacion = false;
+                if (condicionComparacion == 1) {
+                    resultadoComparacion = (valorA > valorB);
+                } else if (condicionComparacion == 0) {
+                    resultadoComparacion = (valorA == valorB);
+                } else if (condicionComparacion == -1) {
+                    resultadoComparacion = (valorA < valorB);
                 }
-                else if(dimension1<dimension2){
-                    dimension2=dimension2-2;
-                    fila2=fila2-1;
-                    columna2=columna2-1;
-                }
-            } else if (condicionComparacion == -1) {
-                dimension2=dimension2+2;
-                fila2=fila2+1;
-                columna2=columna2+1;
 
+                if (resultadoComparacion) {
+                    cout << "La restriccion se cumplio en la comparacion " << m + 1 << " - Matriz " << i + 1 << " vs Matriz " << i + 2 << " rotada " << (rotacionesMatriz * 90) << " grados: Cumple" << endl << endl;
+                    imprimirMatriz(matriz1, dimension1);
+                    imprimirMatriz(matriz2, dimension2);
+                    claveCumplida = true;
+                    modos[i + 2] = rotacionesMatriz;
+                    break; // Si la clave se cumple, salir del bucle
+                }
+
+                // Rotar la matriz 2 para la próxima iteración
+                rotarMatriz(matriz2, dimension2);
+                rotacionesMatriz++;
             }
-            aux++;
-        }
-        }while(!claveCumplida && aux<100);
+
+            if (!claveCumplida) {
+                liberarMatriz(matriz2, dimension2);
+                dimension2 = dimension;
+                matriz2 = reservarMatriz(dimension2);
+                generarMatriz(matriz2, dimension2);
+                rotacionesMatriz = 0;
+                cout << "La dimension de la matriz B se va a modificar:" << endl;
+                if (condicionComparacion == 1) {
+                    cout << endl << "Matriz2 se va a reducir" << endl;
+                    liberarMatriz(matriz2, dimension2);
+                    dimension2 = dimension2 - 2;
+                    matriz2 = reservarMatriz(dimension2);
+                    generarMatriz(matriz2, dimension2);
+                    fila2 = fila2 - 1;
+                    columna2 = columna2 - 1;
+                } else if (condicionComparacion == 0) {
+                    if (dimension1 > dimension2) {
+                        cout << endl << "Matriz2 va a aumentar" << endl;
+                        liberarMatriz(matriz2, dimension2);
+                        dimension2 = dimension2 + 2;
+                        matriz2 = reservarMatriz(dimension2);
+                        generarMatriz(matriz2, dimension2);
+                        fila2 = fila2 + 1;
+                        columna2 = columna2 + 1;
+                    } else if (dimension1 < dimension2) {
+                        cout << endl << "Matriz2 se va a reducir" << endl;
+                        liberarMatriz(matriz2, dimension2);
+                        dimension2 = dimension2 - 2;
+                        matriz2 = reservarMatriz(dimension2);
+                        generarMatriz(matriz2, dimension2);
+                        fila2 = fila2 - 1;
+                        columna2 = columna2 - 1;
+                    }
+                } else if (condicionComparacion == -1) {
+                    cout << endl << "Matriz2 va a aumentar" << endl;
+                    liberarMatriz(matriz2, dimension2);
+                    dimension2 = dimension2 + 2;
+                    matriz2 = reservarMatriz(dimension2);
+                    generarMatriz(matriz2, dimension2);
+                    fila2 = fila2 + 1;
+                    columna2 = columna2 + 1;
+                }
+                aux++;
+                cout << endl << aux << endl;
+            }
+        }while(!claveCumplida && aux<100 && dimension2>=3);
 
         if (!claveCumplida) {
             modos[i+2] = 0; // Si no se cumple, almacenar cero en la posición correspondiente
             cout << "La restriccion NO se cumplio con ninguna rotacion" << endl;
         }
+        if (i==0) {
+            dimensiones[i] = dimension1;
+        }
+        // Almacenar la dimensión de la matriz 2 en dimensiones
+        dimensiones[i + 1] = dimension2;
 
         // Liberar memoria de las matrices
         liberarMatriz(matriz1, dimension1);
         liberarMatriz(matriz2, dimension2);
+
+        // Actualizar la dimensión de la matriz 1 para la siguiente iteración
+        dimension1 = dimension2;
     }
 
+    // Imprimir los modos de rotación
     cout << "\nModos de rotacion: { ";
     for (int i = 1; i < contador; ++i) {
         cout << modos[i] << " ";
     }
-    cout <<"}"<< endl;
+    cout << "}" << endl;
+
+    // Imprimir las dimensiones de las matrices
+    cout << "Dimensiones de las matrices: { ";
+    for (int i = 0; i < contador - 1; ++i) {
+        cout << dimensiones[i] << " ";
+    }
+    cout << "}" << endl;
 
     // Liberar memoria de la matriz base
     liberarMatriz(matrizBase, dimension);
