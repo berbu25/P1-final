@@ -116,6 +116,7 @@ void crearCerradura() {
         }
     }
     int modos[contador-1] = {0};
+    int dimensiones[contador-1] = {0}; // Nuevo arreglo para almacenar las dimensiones de las matrices
 
     // Calcular la dimensión de las matrices de la cerradura
     int dimension = (clave[0] > clave[1]) ? clave[0] : clave[1];
@@ -259,17 +260,33 @@ void crearCerradura() {
             modos[i+2] = 0; // Si no se cumple, almacenar cero en la posición correspondiente
             cout << "La restriccion NO se cumplio con ninguna rotacion" << endl;
         }
+        if (i==0) {
+            dimensiones[i] = dimension1;
+        }
+        // Almacenar la dimensión de la matriz 2 en dimensiones
+        dimensiones[i + 1] = dimension2;
 
         // Liberar memoria de las matrices
         liberarMatriz(matriz1, dimension1);
         liberarMatriz(matriz2, dimension2);
+
+        // Actualizar la dimensión de la matriz 1 para la siguiente iteración
+        dimension1 = dimension2;
     }
 
+    // Imprimir los modos de rotación
     cout << "\nModos de rotacion: { ";
     for (int i = 1; i < contador; ++i) {
         cout << modos[i] << " ";
     }
-    cout <<"}"<< endl;
+    cout << "}" << endl;
+
+    // Imprimir las dimensiones de las matrices
+    cout << "Dimensiones de las matrices: { ";
+    for (int i = 0; i < contador - 1; ++i) {
+        cout << dimensiones[i] << " ";
+    }
+    cout << "}" << endl;
 
     // Liberar memoria de la matriz base
     liberarMatriz(matrizBase, dimension);
