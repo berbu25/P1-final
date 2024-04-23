@@ -217,6 +217,7 @@ void crearCerradura() {
         cout << "La dimensión de la matriz B se va a modificar:" << endl;
 
         if (!claveCumplida) {
+            rotacionesMatriz=0;
             if (condicionComparacion == 1) {
                 dimension2=dimension2-2;
                 fila2=fila2-1;
