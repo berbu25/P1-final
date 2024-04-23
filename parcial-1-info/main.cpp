@@ -2,6 +2,36 @@
 
 using namespace std;
 
+//Función que me verifica si es string
+bool esNumerico(string linea) {
+    bool b = true;
+    int longitud = linea.size();
+
+    if (longitud == 0) { // Cuando el usuario pulsa ENTER es decir no entra nada
+        b = false;
+    }
+    else if (longitud == 1 && !isdigit(linea[0])) { //Si es solo un carácter y no es digito
+        b = false;
+    }
+    else {
+        int i;
+        if (linea[0] == '+' || linea[0] == '-') {
+            i = 1;
+        } else {
+            i = 0;
+        }
+        while (i < longitud) {
+            if (!isdigit(linea[i])) {
+                b = false;
+                break;
+            }
+            i++;
+        }
+
+    }
+    return b;
+}
+
 // Función para reservar memoria para una matriz de tamaño m x m
 int** reservarMatriz(int m) {
     int** matriz = new int*[m + 1];
@@ -86,35 +116,46 @@ void crearCerradura() {
 
     // Leer las condiciones de entrada del usuario
     while (true) {
+
+        string entrada;
         cout << "Ingrese la condicion " << contador + 1 << ": ";
-        cin >> condicion;
-        if (condicion == -3) {
-            break;
-        }
-        if (contador == 0 || contador == 1) {
-            if (condicion < 1) {
-                cout << "La fila o la columna deben ser positivas" << endl;
-            } else {
-                clave = agregarDato(condicion, clave, contador);
-                contador++;
+        cin >> entrada;
+
+        if (esNumerico(entrada)) {
+            int condicion = stoi(entrada); // se le asigna a condicion entrada pero convertida de sting a numero
+            if (condicion == -3) {
+                break;
             }
-        } else {
-            if (condicion != 0 && condicion != 1 && condicion != -1 && condicion != -3) {
-                cout << "Debe ingresar <0> <1> <-1> o <-3>" << endl;
-            } else {
-                if (condicion != -3) {
+            if (contador == 0 || contador == 1) {
+                if (condicion < 1) {
+                    cout << "La fila o la columna deben ser positivas" << endl;
+                }
+                else {
                     clave = agregarDato(condicion, clave, contador);
                     contador++;
+                }
+            } else {
+                if (condicion != 0 && condicion != 1 && condicion != -1 && condicion != -3) {
+                    cout << "Debe ingresar <0> <1> <-1> o <-3>" << endl;
                 } else {
-                    if (contador <= 2) {
-                        cout << "Debe ingresar al menos 3 condiciones (fila, columna, condicion1)" << endl;
+                    if (condicion != -3) {
+                        clave = agregarDato(condicion, clave, contador);
+                        contador++;
                     } else {
-                        break;
+                        if (contador <= 2) {
+                            cout << "Debe ingresar al menos 3 condiciones (fila, columna, condicion1)" << endl;
+                        } else {
+                            false;
+                        }
                     }
                 }
             }
+        } else {
+            cout << "Debe ingresar un valor entero." << endl;
         }
     }
+
+
     int modos[contador-1] = {0};
     int dimensiones[contador-1] = {0}; // Nuevo arreglo para almacenar las dimensiones de las matrices
 
@@ -128,8 +169,20 @@ void crearCerradura() {
         dimension++;
     }
 
+    int centroFila = (dimension + 1)/2;
+    int centroColumna = (dimension + 1)/2;
+
     int dimension1=dimension;
     int dimension2=dimension;
+
+    if (clave[0] == centroFila && clave[1] == centroColumna) {
+        cout << "No se puede usar el centro de la matriz para generar la cerradura. Ingrese otra fila y columna: " << endl;
+        // Pedir nuevamente la fila y la columna
+        cout << "Ingrese la nueva fila: ";
+        cin >> clave[0];
+        cout << "Ingrese la nueva columna: ";
+        cin >> clave[1];
+    }
 
     // Generar la matriz base para la cerradura y mostrarla
     int** matrizBase = reservarMatriz(dimension);
