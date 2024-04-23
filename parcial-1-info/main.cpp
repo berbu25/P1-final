@@ -1,6 +1,39 @@
 #include <iostream>
+#include <string>
+#include <cctype> // Para la función isdigit()
+//#include <cstdlib>
 
 using namespace std;
+
+//Función que me verifica si es string
+bool esNumerico(string linea) {
+    bool b = true;
+    int longitud = linea.size();
+
+    if (longitud == 0) { // Cuando el usuario pulsa ENTER es decir no entra nada
+        b = false;
+    }
+    else if (longitud == 1 && !isdigit(linea[0])) { //Si es solo un carácter y no es digito
+        b = false;
+    }
+    else {
+        int i;
+        if (linea[0] == '+' || linea[0] == '-') {
+            i = 1;
+        } else {
+            i = 0;
+        }
+        while (i < longitud) {
+            if (!isdigit(linea[i])) {
+                b = false;
+                break;
+            }
+            i++;
+        }
+
+    }
+    return b;
+}
 
 // Función para reservar memoria para una matriz de tamaño m x m
 int** reservarMatriz(int m) {
@@ -67,6 +100,8 @@ void imprimirMatriz(int** matriz, int m) {
     cout << endl;
 }
 
+
+
 // Función para agregar un dato al final de un arreglo
 int* agregarDato(int numero, int* arreglo, int longitud) {
     int* nuevoArreglo = new int[longitud + 1];
@@ -88,34 +123,41 @@ void crearCerradura() {
 
     // Leer las condiciones de entrada del usuario
     while (true) {
+        string entrada;
         cout << "Ingrese la condicion " << contador + 1 << ": ";
-        cin >> condicion;
-        if (condicion == -3) {
-            break;
-        }
-        if (contador == 0 || contador == 1) {
-            if (condicion < 1) {
-                cout << "La fila o la columna deben ser positivas" << endl;
+        cin >> entrada;
+
+        if (esNumerico(entrada)) {
+            int condicion = stoi(entrada); // se le asigna a condicion entrada pero convertida de sting a numero
+            if (condicion == -3) {
+                break;
             }
-            else {
-                clave = agregarDato(condicion, clave, contador);
-                contador++;
-            }
-        } else {
-            if (condicion != 0 && condicion != 1 && condicion != -1 && condicion != -3) {
-                cout << "Debe ingresar <0> <1> <-1> o <-3>" << endl;
-            } else {
-                if (condicion != -3) {
+            if (contador == 0 || contador == 1) {
+                if (condicion < 1) {
+                    cout << "La fila o la columna deben ser positivas" << endl;
+                }
+                else {
                     clave = agregarDato(condicion, clave, contador);
                     contador++;
+                }
+            } else {
+                if (condicion != 0 && condicion != 1 && condicion != -1 && condicion != -3) {
+                    cout << "Debe ingresar <0> <1> <-1> o <-3>" << endl;
                 } else {
-                    if (contador <= 2) {
-                        cout << "Debe ingresar al menos 3 condiciones (fila, columna, condicion1)" << endl;
+                    if (condicion != -3) {
+                        clave = agregarDato(condicion, clave, contador);
+                        contador++;
                     } else {
-                        false;
+                        if (contador <= 2) {
+                            cout << "Debe ingresar al menos 3 condiciones (fila, columna, condicion1)" << endl;
+                        } else {
+                            false;
+                        }
                     }
                 }
             }
+        } else {
+            cout << "Debe ingresar un valor entero." << endl;
         }
     }
     int modos[contador-1] = {0};
